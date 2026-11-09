@@ -1,0 +1,13 @@
+package com.islamshariful.spring_mcp_client;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SpringMcpClientApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
