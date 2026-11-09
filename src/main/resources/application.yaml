@@ -26,3 +26,8 @@ spring:
           connections:
             spring-mcp-server:
               url: ${MCP_SERVER_URL:http://localhost:8080}
+
+mcp:
+  server:
+    # API key for the server's task tools. Keep it out of this file: set MCP_SERVER_API_KEY.
+    api-key: ${MCP_SERVER_API_KEY:}
