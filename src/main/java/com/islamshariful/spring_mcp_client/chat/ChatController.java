@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
  * <pre>
  * POST /api/chat
  * {"message": "Do I need an umbrella in Dhaka tomorrow?"}
+ *
+ * → {"conversationId": "3f2b...", "reply": "..."}
  * </pre>
+ * Send the returned {@code conversationId} with your next message to continue the conversation.
  */
 @RestController
 @RequestMapping("/api/chat")
@@ -28,10 +31,12 @@ public class ChatController {
         if (request.message() == null || request.message().isBlank()) {
             throw new IllegalArgumentException("message can't be empty");
         }
-        return new ChatResponse(chatService.chat(request.message()));
+        ChatService.Reply reply = chatService.chat(request.conversationId(), request.message());
+        return new ChatResponse(reply.conversationId(), reply.text());
     }
 
-    public record ChatRequest(String message) {}
+    /** {@code conversationId} is optional: leave it out to start a new conversation. */
+    public record ChatRequest(String conversationId, String message) {}
 
-    public record ChatResponse(String reply) {}
+    public record ChatResponse(String conversationId, String reply) {}
 }
