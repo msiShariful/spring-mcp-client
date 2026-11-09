@@ -1,6 +1,8 @@
 package com.islamshariful.spring_mcp_client.mcp;
 
 import io.modelcontextprotocol.client.McpSyncClient;
+import io.modelcontextprotocol.spec.McpSchema.GetPromptRequest;
+import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import io.modelcontextprotocol.spec.McpSchema.ResourceContents;
 import io.modelcontextprotocol.spec.McpSchema.TextResourceContents;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Talks to the MCP server directly (no AI involved) to show what it offers:
@@ -62,6 +66,17 @@ public class McpExplorerService {
                                 .map(a -> new PromptArgumentInfo(a.name(), a.description(), Boolean.TRUE.equals(a.required())))
                                 .toList()))
                 .toList();
+    }
+
+    /**
+     * Fills in a server prompt with the given arguments and returns its text,
+     * e.g. prompt "plan_my_day" with {city: "Dhaka"}.
+     */
+    public String renderPrompt(String name, Map<String, String> arguments) {
+        Map<String, Object> args = Map.copyOf(arguments == null ? Map.of() : arguments);
+        return server().getPrompt(new GetPromptRequest(name, args)).messages().stream()
+                .map(message -> message.content() instanceof TextContent text ? text.text() : "")
+                .collect(Collectors.joining("\n\n"));
     }
 
     /** This client connects to one MCP server (spring-mcp-server). */
