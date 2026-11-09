@@ -1,0 +1,71 @@
+### Sample requests for spring-mcp-client.
+### In IntelliJ, open this file and click the green ▶ next to a request.
+### Start spring-mcp-server (port 8080) and this client (port 8081) first.
+
+### ---------- Chat with Claude (uses the server's tools) ----------
+
+### Weather question (public tools, no server API key needed)
+POST http://localhost:8081/api/chat
+Content-Type: application/json
+
+{
+  "message": "Do I need an umbrella in Dhaka tomorrow?"
+}
+
+### Follow-up in the same conversation (paste the conversationId from the previous reply)
+POST http://localhost:8081/api/chat
+Content-Type: application/json
+
+{
+  "conversationId": "PASTE-ID-HERE",
+  "message": "And the day after?"
+}
+
+### Task question (needs MCP_SERVER_API_KEY)
+POST http://localhost:8081/api/chat
+Content-Type: application/json
+
+{
+  "message": "Add a high priority task to renew my passport by next Friday, then show my open tasks."
+}
+
+### ---------- Run the server's prompts ----------
+
+### Plan my day
+POST http://localhost:8081/api/prompts/plan_my_day
+Content-Type: application/json
+
+{
+  "arguments": { "city": "Dhaka" }
+}
+
+### Trip prep
+POST http://localhost:8081/api/prompts/trip_prep
+Content-Type: application/json
+
+{
+  "arguments": { "city": "London", "days": "5" }
+}
+
+### Weekly review (no arguments)
+POST http://localhost:8081/api/prompts/weekly_review
+
+### ---------- Explore the MCP server (no AI) ----------
+
+### Server info and instructions
+GET http://localhost:8081/api/mcp/server
+
+### Tools
+GET http://localhost:8081/api/mcp/tools
+
+### Resources and templates
+GET http://localhost:8081/api/mcp/resources
+
+### Read a resource
+GET http://localhost:8081/api/mcp/resources/read?uri=weather://Dhaka
+
+### Read your open tasks (needs MCP_SERVER_API_KEY)
+GET http://localhost:8081/api/mcp/resources/read?uri=tasks://open
+
+### Prompts
+GET http://localhost:8081/api/mcp/prompts
